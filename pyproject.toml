@@ -1,0 +1,55 @@
+[project]
+name = "my-agent"
+version = "0.1.0"
+description = "基于 Claude Agent SDK 的可复用 Agent 模板：核心编排层 + CLI 调试入口 + FastAPI/SSE Web 骨架"
+readme = "README.md"
+authors = [
+    { name = "loyalgod", email = "3440405910@qq.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "claude-agent-sdk>=0.2.130",
+    "pydantic-settings>=2.5",
+    "tzdata>=2024.1",
+]
+
+[project.optional-dependencies]
+web = [
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+]
+
+[project.scripts]
+my-agent = "cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.24",
+    "httpx>=0.27",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+# 扁平布局：src/ 根下 core/、web/ 为包，cli.py 为顶级模块
+[tool.setuptools]
+package-dir = { "" = "src" }
+packages = ["core", "core.tools", "web"]
+py-modules = ["cli"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["core", "web", "cli"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
